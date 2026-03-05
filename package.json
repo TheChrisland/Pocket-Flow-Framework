@@ -1,14 +1,20 @@
 {
   "name": "pocketflow",
   "version": "0.1.0",
-  "description": "A modern flow framework for pocket-sized applications",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "A TypeScript framework for building LLM-powered workflows using nested directed graphs",
+  "main": "dist/pocket.js",
+  "types": "dist/pocket.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
   },
   "dependencies": {
     "@types/lodash": "^4.17.16",
@@ -28,12 +34,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/pocket-flow-framework"
+    "url": "https://github.com/Osly-AI/Pocket-Flow-Framework.git"
   },
   "keywords": [
+    "llm",
+    "ai",
+    "workflow",
+    "agent",
+    "dag",
     "flow",
     "framework",
-    "typescript"
+    "typescript",
+    "directed-graph",
+    "task-decomposition",
+    "rag"
   ],
   "author": "Pocket Flow Framework Team",
   "license": "MIT",

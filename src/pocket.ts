@@ -29,7 +29,7 @@ export abstract class BaseNode {
             throw new Error(`Action ${action} already exists`);
         }
 
-        
+
         this.successors.set(action, newSuccessor);
     }
 
@@ -41,7 +41,7 @@ export abstract class BaseNode {
         // This is important for parallel execution to not have race conditions
         return this.successors.get(name)!.clone();
     }
-    
+
     abstract prep(sharedState: any): Promise<any>;
 
     /**
@@ -120,18 +120,17 @@ export class Flow extends BaseNode {
         return this.start.clone();
     }
 
-    async execCore(prepResult: any): Promise<any> {
+    async execCore(_prepResult: any): Promise<any> {
         throw new Error("Flow node does not support direct execution");
     }
 
-    async prep(sharedState: any): Promise<any> {
+    async prep(_sharedState: any): Promise<any> {
         return {}; // Pass through the shared state to exec_core
     }
 
     async orchestrate(sharedState: any, flowParams?: any): Promise<any> {
         let currentNode: BaseNode | undefined = await this.getStartNode();
         while (currentNode) {
-            console.log("Orchestrate -- currentNode", currentNode);
             currentNode.setParams((flowParams) ? flowParams : this.flow_params);
             const action = await currentNode.run(sharedState);
             currentNode = currentNode.getSuccessor(action); // If undefined, the flow is complete
@@ -147,19 +146,17 @@ export class Flow extends BaseNode {
         return this.post(prepResult, undefined, sharedState);
     }
 
-    async post(prepResult: any, execResult: any, sharedState: any): Promise<string> {
+    async post(_prepResult: any, _execResult: any, _sharedState: any): Promise<string> {
         return DEFAULT_ACTION;
     }
 }
 
 export class BatchFlow extends Flow {
-    async prep(sharedState: any): Promise<any[]> {
-        console.log("BatchFlow -- prep", sharedState);
+    async prep(_sharedState: any): Promise<any[]> {
         return [];
     }
 
     async run(sharedState: any): Promise<string> {
-        console.log("BatchFlow -- run");
         const prepResultList = await this.prep(sharedState);
 
         const resultPromises = [];
@@ -172,8 +169,7 @@ export class BatchFlow extends Flow {
         return this.post(prepResultList, resultList, sharedState);
     }
 
-    async post(prepResultList: any[], resultList: any[], sharedState: any): Promise<string> {
-        console.log(`Processed ${resultList.length} items from ${prepResultList.length} prep results`);
+    async post(_prepResultList: any[], _resultList: any[], _sharedState: any): Promise<string> {
         return DEFAULT_ACTION;
     }
 }

@@ -1,4 +1,4 @@
-import { BaseNode } from "./pocket";
+import { BaseNode } from "../src/pocket";
 
 export class HelloNode extends BaseNode {
     async prep(sharedState: any): Promise<any> {

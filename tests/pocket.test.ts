@@ -1,5 +1,5 @@
 import { BaseNode, Flow, RetryNode, DEFAULT_ACTION, BatchFlow } from '../src/pocket';
-import { HelloNode, WordNode } from '../src/testNodes';
+import { HelloNode, WordNode } from './testNodes';
 
 describe("Basic Flow Tests", () => {
     test("Flow not allowed to execute directly", async () => {
@@ -11,7 +11,7 @@ describe("Basic Flow Tests", () => {
         // Create a simple flow that starts with HelloNode and follows with a WordNode branch
         const hello = new HelloNode();
         const nodeA = new WordNode("a");
-        
+
         // By default HelloNode's post returns "a"
         hello.addSuccessor(nodeA, "a");
 
@@ -337,7 +337,7 @@ describe("Nested Flow Tests", () => {
         const start = new NumberNode(5);
         const add = new AddNode(10);
         const multiply = new MultiplyNode(2);
-        
+
         start.addSuccessor(add, DEFAULT_ACTION);
         add.addSuccessor(multiply, DEFAULT_ACTION);
         const f1 = new Flow(start);
@@ -383,7 +383,7 @@ describe("Nested Flow Tests", () => {
         const addTen = new AddNode(10);
         startWithTen.addSuccessor(addTen, DEFAULT_ACTION);
         const flow1 = new Flow(startWithTen);
-        
+
 
         // Create flow2: MultiplyNode(2)
         const multiplyByTwo = new MultiplyNode(2);
@@ -399,7 +399,7 @@ describe("Nested Flow Tests", () => {
         // Final result should be (10 + 10) * 2 = 40
         expect(sharedState.value).toBe(40);
     });
-}); 
+});
 
 class TemplateNode extends BaseNode {
     async prep(sharedState: any): Promise<any> {
@@ -476,7 +476,7 @@ describe("BatchFlow Tests", () => {
     test("BatchFlow spawns parameterized flows and aggregates results", async () => {
         const templateNode = new TemplateNode();
         const batchFlow = new ParameterizedBatchFlow(templateNode);
-        
+
         const start = Date.now();
         const results = await batchFlow.run({});
         const elapsed = Date.now() - start;
